@@ -30,6 +30,7 @@ describe("jobDraftService", () => {
     expect(mockQuery).toHaveBeenCalledTimes(1);
     const [query, values] = mockQuery.mock.calls[0];
     expect(query).toContain("ON CONFLICT (id) DO UPDATE");
+    expect(query).toContain("title = COALESCE(EXCLUDED.title, job_drafts.title)");
     expect(query).toContain("WHERE job_drafts.client_address = $2");
     expect(values).toEqual([
       "draft-1",
