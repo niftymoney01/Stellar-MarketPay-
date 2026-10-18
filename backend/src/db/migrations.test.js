@@ -7,7 +7,7 @@ const {
   rollbackLastMigration,
 } = require("./migrate");
 
-describe("Database Migrations (V1–V49)", () => {
+describe("Database Migrations", () => {
   let hasPostgres = false;
 
   beforeAll(async () => {
@@ -42,6 +42,13 @@ describe("Database Migrations (V1–V49)", () => {
     }
 
     expect(migrations[migrations.length - 1].version).toBeGreaterThanOrEqual(22);
+
+    const developerApiKeyMigrations = migrations.filter((migration) =>
+      /developer_api_keys_and_audit_trail/.test(migration.name)
+    );
+    expect(developerApiKeyMigrations.map((migration) => migration.name)).toEqual([
+      "V5__developer_api_keys_and_audit_trail",
+    ]);
   });
 
   it("applies migrations sequentially and validates schema, foreign keys, and unique indexes after each", async () => {

@@ -1,2 +1,3 @@
--- These tables are owned by V5 and may be referenced by later migrations.
--- V50 only repeats their IF NOT EXISTS definitions for compatibility.
+-- Legacy rollback companion retained for databases that recorded the former
+-- duplicate V50 migration. V5 owns these tables; rolling back the duplicate
+-- must not drop tables that V5 or later migrations depend on.

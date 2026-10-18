@@ -767,5 +767,7 @@ Migrations follow a Flyway-style `V{n}__{description}.{up|down}.sql` naming conv
 | V48 | Missing foreign key and index optimizations |
 | V49 | NFT certificates |
 
+`V5__developer_api_keys_and_audit_trail` is the canonical migration for the audit and developer API-key tables. A former `V50__developer_api_keys_and_audit_trail` repeated the same DDL after V5 was renumbered; its up migration has been retired so fresh databases apply these tables once. The no-op V50 down file remains only to safely roll back databases that recorded that historical duplicate.
+
 The schema is applied idempotently (`CREATE TABLE IF NOT EXISTS`, `ADD COLUMN IF NOT EXISTS`). No destructive changes are made to existing data by default.
 
