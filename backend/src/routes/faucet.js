@@ -40,6 +40,14 @@ const faucetWalletLimiter = createRateLimiter(1, 24 * 60, {
     hashRateLimitIdentifier("wallet", req.body?.publicKey || req.params?.publicKey),
   requestPropertyName: "rateLimit_faucet_wallet",
   legacyHeaders: false,
+  handler: (req, res, _next, options) => {
+    res.setHeader("Cache-Control", "no-store");
+    const retryAfter = Math.ceil((options.windowMs || 86400000) / 1000);
+    res.setHeader("Retry-After", retryAfter);
+    return res.status(429).json({
+      message: "Too many requests — please wait before trying again",
+    });
+  },
 });
 
 /**
@@ -256,10 +264,10 @@ router.post("/fund", faucetIpLimiter, faucetPrincipalLimiter, faucetWalletLimite
  *         description: Public key missing or not a valid Stellar address
  *         content:
  *           application/json:
- *           schema:
- *             $ref: '#/components/schemas/Error'
- *           example:
- *             error: Public key is required
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *               error: Public key is required
  *       403:
  *         description: Faucet is disabled because the server is not configured for testnet
  *         content:
@@ -267,7 +275,7 @@ router.post("/fund", faucetIpLimiter, faucetPrincipalLimiter, faucetWalletLimite
  *             schema:
  *               $ref: '#/components/schemas/Error'
  *             example:
- *             error: Faucet only available on testnet
+ *               error: Faucet only available on testnet
  *       500:
  *         description: Unexpected error while checking the account
  *         content:

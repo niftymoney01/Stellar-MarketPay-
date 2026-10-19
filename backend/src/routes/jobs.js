@@ -1,5 +1,4 @@
 
-Jobs · JS
 /**
  * src/routes/jobs.js
  */
@@ -1151,6 +1150,27 @@ router.post(
     }
   },
 );
- 
+// GET /api/jobs/analytics/categories — stats per category
+router.get("/analytics/categories", generalJobRateLimiter, async (req, res, next) => {
+  try {
+    const { getCategoryAnalytics } = require("../services/jobService");
+    const data = await getCategoryAnalytics();
+    res.json({ success: true, data });
+  } catch (e) {
+    next(e);
+  }
+});
+
+// GET /api/jobs/analytics/overview — platform-wide totals
+router.get("/analytics/overview", generalJobRateLimiter, async (req, res, next) => {
+  try {
+    const { getAnalyticsOverview } = require("../services/jobService");
+    const data = await getAnalyticsOverview();
+    res.json({ success: true, data });
+  } catch (e) {
+    next(e);
+  }
+});
+
 module.exports = router;
  
